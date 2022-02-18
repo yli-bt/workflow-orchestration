@@ -14,5 +14,5 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return "Workflow Orchestration Microservice using ".$router->app->version();
 });

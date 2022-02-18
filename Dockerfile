@@ -1,24 +1,23 @@
 FROM php:7.4-fpm-alpine
 
-RUN apk add --no-cache nginx supervisor wget sqlite-dev sqlite
+RUN apk add --no-cache nginx supervisor wget mysql-dev mysql
+
+RUN docker-php-ext-install pdo_mysql
+
+WORKDIR /var/www/html
 
 RUN mkdir -p /run/nginx
 
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 
-RUN mkdir -p /app
-COPY . /app
-
+COPY . .
 
 RUN sh -c "wget http://getcomposer.org/composer.phar && chmod a+x composer.phar && mv composer.phar /usr/local/bin/composer"
-RUN cd /app && \
-    /usr/local/bin/composer install --no-dev
+RUN cd /var/www/html && /usr/local/bin/composer install 
 
-RUN chown -R www-data: /app
+RUN chown -R www-data: /var/www/html
 
-COPY ./database/database.sqlite /app/database/database.sqlite
-RUN chown -R www-data:www-data /app/database/database.sqlite
+RUN cd /var/www/html && php artisan cache:clear
+#RUN cd /var/www/html && php artisan migrate
 
-RUN cd /app && php artisan cache:clear
-
-CMD sh /app/docker/startup.sh
+CMD sh /var/www/html/docker/startup.sh
