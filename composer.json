@@ -6,9 +6,12 @@
     "type": "project",
     "require": {
         "php": "^7.4|^8.0",
+        "google/protobuf": "^3.17",
+        "grpc/grpc": "^1.38",
         "laravel/lumen-framework": "^8.3.1",
         "ramsey/uuid": "^4.2",
-        "temporal/sdk": ">=1.0"
+        "temporal/sdk": "^1.1",
+        "spiral/tokenizer": ">=2.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

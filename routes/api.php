@@ -16,11 +16,13 @@
 use Illuminate\Http\Request;
 
 $router->get('/v1', function () use ($router) {
-    return "Email microservice API" . " (". $router->app->version() . ")";
+    return "Workflow Orchestration Microservice API" . " [". $router->app->version() . "]";
 });
 
 $router->group(['prefix' => 'v1', 'middleware' => 'JsonRequestMiddleware'], function() use ($router) {
 
+    $router->post('/poc', 'WorkflowPocController@run');
+    /**
     $router->post('/message', 'SendMailController@queueMessage');
 
     $router->post('/template', 'SendMailController@queueTemplate');
@@ -41,6 +43,6 @@ $router->group(['prefix' => 'v1', 'middleware' => 'JsonRequestMiddleware'], func
         return response()->json($response_data);
 
     });
-
+    **/
 });
 
