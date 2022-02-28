@@ -21,14 +21,14 @@ services:
       - .:/var/www/html
       - /var/www/html/vendor/
     depends_on:
-      - mysql
+      - workflow-mysql
     restart: always
   workflow-mysql:
     image: mysql:8.0
     restart: always
     container_name: workflow-mysql
     volumes:
-      - ./data/mysql:/var/lib/mysql:rw
+      - mysql-data:/var/lib/mysql:rw
     environment:
       - MYSQL_ROOT_PASSWORD=#W0rkfl0w!!
       - MYSQL_DATABASE=workflow-orchestration
@@ -48,7 +48,7 @@ services:
     - ${CASSANDRA_PORT:-9042}:9042
     volumes:
     - ./docker/cassandra/jvm.options:/etc/cassandra/jvm.options
-    - temporalcassandradata:/var/lib/cassandra 
+    - temporalcassandradata:/var/lib/cassandra
   elasticsearch:
     container_name: temporal-elasticsearch
     environment:

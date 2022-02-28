@@ -28,7 +28,7 @@ class WorkflowPocController extends Controller
         'file_processing' => FileProcessingWorkflow::class,
         'greeting' => GreetingWorkflowInterface::class
     ];
-    
+
     /**
      * Create a new controller instance.
      *

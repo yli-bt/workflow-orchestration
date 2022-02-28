@@ -1,4 +1,4 @@
-FROM php:8.0.15-fpm-alpine3.15
+FROM php:7.4-fpm-alpine
 
 RUN apk update && apk upgrade
 RUN apk add --no-cache nginx supervisor wget mysql-dev mysql
@@ -11,15 +11,16 @@ RUN apk add --no-cache autoconf
 RUN apk add --no-cache libc-dev
 RUN apk add --no-cache libffi-dev
 
-RUN docker-php-ext-install pdo_mysql grpc mbstring zip gd
-RUN CFLAGS="$CFLAGS -D_GNU_SOURCE" docker-php-ext-install sockets
-RUN pecl install grpc-beta
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/install-php-extensions && install-php-extensions pdo_mysql grpc mbstring zip gd sockets
 
 WORKDIR /var/www/html
 
 RUN mkdir -p /run/nginx
 
 COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/supervisord.conf /app/docker/supervisord.conf
 
 COPY . .
 
