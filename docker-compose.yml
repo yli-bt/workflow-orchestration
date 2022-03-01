@@ -13,8 +13,9 @@ services:
     environment:
       - PORT=80
     ports:
-      - 80:80
+      - ${PORT:80}:80
       - 443:443
+      - 8080:8080
     networks:
       - laravel
     volumes:
