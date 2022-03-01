@@ -2,16 +2,16 @@ steps:
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/developer-playground-328319/workflow-orchestration', '.']
-    timeout: '3600s'
+    timeout: '7200s'
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/developer-playground-328319/workflow-orchestration']
-    timeout: '3600s'
+    timeout: '7200s'
   # Deploy container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: ['run', 'deploy', 'workflow-orchestration', '--image', 'gcr.io/developer-playground-328319/workflow-orchestration', '--region', 'us']
-    timeout: '3600s'
+    timeout: '7300s'
 images:
   - gcr.io/developer-playground-328319/workflow-orchestration
-timeout: '3600s'
+timeout: '7300s'
