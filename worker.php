@@ -2,36 +2,18 @@
 
 declare(strict_types=1);
 
-use Temporal\WorkerFactory;
-use App\Activities\HelloOneActivity;
+include 'vendor/autoload.php';
 
-ini_set('display_errors', 'stderr');
-include('vendor/autoload.php');
+$worker = Spiral\RoadRunner\Worker::create();
+$psr17Factory = new Nyholm\Psr7\Factory\Psr17Factory();
+$psr7Worker = new Spiral\RoadRunner\Http\PSR7Worker($worker, $psr17Factory, $psr17Factory, $psr17Factory);
 
-$workflowTypes = [
-    'App\Workflows\HelloWorkflow'
-];
-
-$activityTypes = [
-    'App\Activities\HelloOneActivity',
-    'App\Activities\HelloTwoActivity',
-    'App\Activities\HelloThreeActivity'
-];
-
-$factory = WorkerFactory::create();
-$worker = $factory->newWorker();
-
-foreach ($workflowTypes as $workflowType) {
-    $worker->registerWorkflowTypes($workflowType);
+while ($req = $psr7Worker->waitRequest()) {
+    try {
+        $res = $psr17Factory->createResponse();
+        $res->getBody()->write('Hello world from RoadRunner!');
+        $psr7Worker->respond($res);
+    } catch (Throwable $e) {
+        $psr7Worker->getWorker()->error((string)$e);
+    }
 }
-
-foreach ($activityTypes as $activityType) {
-    $worker->registerActivityImplementations(new $activityType());
-}
-
-$hostTaskQueue = gethostname();
-
-$factory->newWorker($hostTaskQueue)
-    ->registerActivityImplementations(new HelloOneActivity($hostTaskQueue));
-
-$factory->run();
