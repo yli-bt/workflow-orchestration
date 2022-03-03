@@ -13,7 +13,7 @@ services:
     environment:
       - PORT=80
     ports:
-      - ${PORT:80}:80
+      - ${PORT}:80
       - 443:443
       - 8080:8080
     networks:
@@ -26,19 +26,20 @@ services:
       - temporal
     restart: always
   workflow-mysql:
-    image: mysql:8.0
+    image: mysql:8.0-debian
     restart: always
     container_name: workflow-mysql
     volumes:
       - mysql-data:/var/lib/mysql:rw
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
-      MYSQL_ROOT_USER: root
-      MYSQL_ROOT_PASSWORD: #W0rkfl0w!!
-      MYSQL_DATABASE: workflow-orchestration
-      MYSQL_USER: workflow
-      MYSQL_PASSWORD: #W0rkfl0w!!
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=#W0rkfl0w!!
+      - MYSQL_DATABASE=workflow-orchestration
+      - MYSQL_USER=workflow
+      - MYSQL_PASSWORD=#W0rkfl0w!!
+      - SERVICE_TAGS=dev
+      - SERVICE_NAME=mysql
     networks:
       - laravel
     ports:

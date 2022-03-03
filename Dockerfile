@@ -34,8 +34,10 @@ RUN cd /var/www/html && php artisan cache:clear
 
 RUN cd /var/www/html && /var/www/html/vendor/bin/rr get
 
-CMD sh /var/www/html/docker/startup.sh
+ENTRYPOINT []
 
-CMD cd /var/www/html && php artisan migrate
+#CMD cd /var/www/html && /var/www/html/rr serve
 
-CMD cd /var/www/html && /var/www/html/rr serve
+#RUN /bin/sh -c /var/www/html/docker/startup.sh
+
+#CMD cd /var/www/html && php artisan migrate
