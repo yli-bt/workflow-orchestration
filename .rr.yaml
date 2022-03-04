@@ -1,13 +1,16 @@
+version: "2.7"
+
 rpc:
-  listen: tcp://127.0.0.1:6001
+  listen: tcp://0.0.0.0:6001
 
 server:
-  command: 'php artisan workflow:worker'
+  command: "php artisan workflow:worker"
 
 temporal:
   address: "temporal:7233"
   activities:
     num_workers: 10
+    max_jobs: 64
 
 logs:
   level: debug

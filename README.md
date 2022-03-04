@@ -1,24 +1,31 @@
-# Lumen PHP Framework
+# Workflow Orchestration Microservice
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://img.shields.io/packagist/dt/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://img.shields.io/packagist/v/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://img.shields.io/packagist/l/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
+Built on top of Lumen, Nginx, Temporal.io, and PHP Roadrunner.
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+## Install
 
-## Official Documentation
+After build, you must install grpc and protobuf php extensions
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+> docker ps
 
-## Contributing
+Copy the container ID for "workflow-orchestration_laravel_workflow_app"
 
-Thank you for considering contributing to Lumen! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+> docker exec -it <container id> pecl install grpc-beta protobuf
+> docker exec -it <container id> docker-php-ext-enable protobuf
+>  docker exec -it <container id> docker-php-ext-enable grpc
 
-## Security Vulnerabilities
+Restart nginx
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+>  docker exec -it <container id> nginx -s reload
 
-## License
+Login to restart php-fpm
 
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+> docker exec -it <container id> /bin/sh
+
+> ps -ef
+
+Get the PIDs of the php-fpm processes and kill them.  Restart php-fpm
+
+> kill -HUP <pids>
+> php-fpm -D
+> exit
