@@ -13,7 +13,7 @@ services:
     command: sh -c "/var/www/html/docker/startup.sh"
     env_file: .env
     ports:
-      - 80:${PORT}
+      - 80:80
       - 443:443
     networks:
       - laravel
