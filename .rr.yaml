@@ -4,7 +4,7 @@ rpc:
   listen: tcp://0.0.0.0:6001
 
 server:
-  command: "php artisan workflow:worker"
+  command: "php /var/www/html/artisan workflow:worker"
 
 temporal:
   address: "temporal:7233"
