@@ -1,0 +1,21 @@
+version: "2.7"
+
+rpc:
+  listen: tcp://0.0.0.0:6001
+
+server:
+  command: "php /var/www/html/artisan workflow:worker"
+
+temporal:
+  address: "temporal:7233"
+  activities:
+    num_workers: 10
+    max_jobs: 64
+
+logs:
+  level: debug
+  channels:
+    temporal:
+      level: debug
+    informer:
+      mode: none

@@ -11,19 +11,17 @@ use Temporal\Client\WorkflowOptions;
 use Temporal\Client\WorkflowClient;
 use Temporal\Client\WorkflowClientInterface;
 use Temporal\Client\GRPC\ServiceClient;
-use Boomtown\Contracts\GreetingWorkflowInterface;
-use Boomtown\Contracts\HelloWorkflowInterface;
-use Boomtown\Implemenations\FileProcessingWorkflow;
+use App\Workflows\GreetingWorkflowInterface;
+use App\Workflows\HelloWorkflowInterface;
+use App\Workflows\FileProcessingWorkflow;
 
 class WorkflowPocController extends Controller
 {
     private const RUN_VALIDATOR = [];
-    const DEFAULT_TEMPORAL_HOST = 'localhost';
-    const DEFAULT_TEMPORAL_PORT = '7233';
-    const TEMPORAL_HOST_ENV = 'TEMPORAL_HOST';
-    const TEMPORAL_PORT_ENV = 'TEMPORAL_PORT';
 
     protected WorkflowClientInterface $workflowClient;
+
+    protected $host = 'temporal:7233';
 
     protected $workflows = [
         'hello' => HelloWorkflowInterface::class,
@@ -38,23 +36,7 @@ class WorkflowPocController extends Controller
      */
     public function __construct()
     {
-        $this->workflowClient = WorkflowClient::create(ServiceClient::create($this->getTemporalHost()));
-    }
-
-    /**
-     * Retrieves temporal host/port connection string
-     *
-     * @return string
-     */
-    protected function getTemporalHost(): string
-    {
-        if ($temporalHost = env(self::TEMPORAL_HOST_ENV) &&
-            $temporalPort = env(self::TEMPORAL_PORT_ENV)
-        ) {
-            return $temporalHost . ':' . $temporalPort;
-        } else {
-            return self::DEFAULT_TEMPORAL_HOST . ':' . self::DEFAULT_TEMPORAL_PORT;
-        }
+        $this->workflowClient = WorkflowClient::create(ServiceClient::create($this->host));
     }
 
     /**
