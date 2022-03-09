@@ -17,5 +17,5 @@ RUN chown -R www-data:www-data /var/www/html
 RUN cd /var/www/html && \
     php artisan cache:clear
 
-ENTRYPOINT ["/bin/sh", "-c", "/var/www/html/docker/startup.sh"]
+ENTRYPOINT []
 
