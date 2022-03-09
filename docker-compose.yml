@@ -10,7 +10,6 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: laravel_workflow_app
-    command: sh -c "/var/www/html/docker/startup.sh"
     env_file: .env
     ports:
       - ${PORT:-80}:80
@@ -20,28 +19,4 @@ services:
     volumes:
       - .:/var/www/html
       - /var/www/html/vendor/
-    depends_on:
-      - workflow_mysql
     restart: always
-  workflow_mysql:
-    image: mysql:8.0-debian
-    restart: always
-    container_name: workflow_mysql
-    volumes:
-      - mysql-data:/var/lib/mysql:rw
-      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
-    environment:
-      - MYSQL_ROOT_USER=root
-      - MYSQL_ROOT_PASSWORD=#W0rkfl0w!!
-      - MYSQL_DATABASE=workflow-orchestration
-      - MYSQL_USER=workflow
-      - MYSQL_PASSWORD=#W0rkfl0w!!
-      - SERVICE_TAGS=dev
-      - SERVICE_NAME=mysql
-    networks:
-      - laravel
-    ports:
-      - 8001:3306
-volumes:
-  mysql-data:
-    driver: local

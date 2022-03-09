@@ -15,7 +15,7 @@ class CreateWorkflowsTable extends Migration
     public function up()
     {
         Schema::create('workflows', function (Blueprint $table) {
-            $table->uuid('uuid')->default(new Expression('(uuid())'))->primary();
+            $table->uuid('uuid')->primary();
             $table->string('version', 80)->default('1.0');
             $table->string('spec_version', 80)->default('1.0');
             $table->string('name')->index();
@@ -28,7 +28,7 @@ class CreateWorkflowsTable extends Migration
             $table->dateTime('created_at');
         });
         Schema::create('workflow_audit_logs', function (Blueprint $table) {
-            $table->uuid('uuid')->default(new Expression('(uuid())'))->primary();
+            $table->uuid('uuid')->primary();
             $table->enum('action', ['create', 'update', 'delete']);
             $table->string('column');
             $table->text('old_value');
@@ -38,7 +38,7 @@ class CreateWorkflowsTable extends Migration
             $table->foreignUuid('workflow_uuid')->references('uuid')->on('workflows');
         });
         Schema::create('workflow_runs', function (Blueprint $table) {
-            $table->uuid('uuid')->default(new Expression('(uuid())'))->primary();
+            $table->uuid('uuid')->primary();
             $table->json('input')->nullable();
             $table->json('metadata')->nullable();
             $table->dateTime('created_at');
@@ -48,7 +48,7 @@ class CreateWorkflowsTable extends Migration
             $table->foreignUuid('workflow_uuid')->references('uuid')->on('workflows');
         });
         Schema::create('object_references', function (Blueprint $table) {
-            $table->uuid('uuid')->default(new Expression('(uuid())'))->primary();
+            $table->uuid('uuid')->primary();
             $table->string('object_type', 80);
             $table->string('object_id', 80);
         });
@@ -57,7 +57,7 @@ class CreateWorkflowsTable extends Migration
             $table->foreignUuid('object_reference_uuid')->references('uuid')->on('object_references');
         });
         Schema::create('activities', function (Blueprint $table) {
-            $table->uuid('uuid')->default(new Expression('(uuid())'))->primary();
+            $table->uuid('uuid')->primary();
             $table->string('version', 80)->default('1.0');
             $table->string('name')->index();
             $table->text('description')->nullable();
