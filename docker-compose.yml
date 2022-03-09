@@ -12,6 +12,8 @@ services:
     container_name: laravel_workflow_app
     command: sh -c "/var/www/html/docker/startup.sh"
     env_file: .env
+    expose:
+      - ${PORT:-80}
     ports:
       - ${PORT:-80}:80
       - 443:443

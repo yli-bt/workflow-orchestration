@@ -18,7 +18,7 @@ use Boomtown\Implemenations\FileProcessingWorkflow;
 class WorkflowPocController extends Controller
 {
     private const RUN_VALIDATOR = [];
-    const DEFAULT_TEMPORAL_HOST = '127.0.0.1';
+    const DEFAULT_TEMPORAL_HOST = 'localhost';
     const DEFAULT_TEMPORAL_PORT = '7233';
     const TEMPORAL_HOST_ENV = 'TEMPORAL_HOST';
     const TEMPORAL_PORT_ENV = 'TEMPORAL_PORT';
