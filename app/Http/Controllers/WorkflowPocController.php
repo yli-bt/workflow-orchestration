@@ -21,7 +21,7 @@ class WorkflowPocController extends Controller
 
     protected WorkflowClientInterface $workflowClient;
 
-    protected $host = 'temporal:7233';
+    private const DEFAULT_TEMPORAL_HOST = 'temporal:7233';
 
     protected $workflows = [
         'hello' => HelloWorkflowInterface::class,
@@ -36,7 +36,9 @@ class WorkflowPocController extends Controller
      */
     public function __construct()
     {
-        $this->workflowClient = WorkflowClient::create(ServiceClient::create($this->host));
+        $this->workflowClient = WorkflowClient::create(
+            ServiceClient::create(env('TEMPORAL_HOST', self::DEFAULT_TEMPORAL_HOST))
+        );
     }
 
     /**
