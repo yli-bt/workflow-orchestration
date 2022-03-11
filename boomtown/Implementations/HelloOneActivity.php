@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Activities;
+namespace Boomtown\Implementations;
 
 use Temporal\Activity;
+use Boomtown\Contracts\HelloActivityInterface;
 
 // @@@SNIPSTART php-hello-one-activity
-#[Activity\ActivityInterface(prefix: "HelloOne.")]
+#[ActivityInterface(prefix: "HelloOne.")]
 class HelloOneActivity implements HelloActivityInterface
 {
     private $greeting = 'Hello';

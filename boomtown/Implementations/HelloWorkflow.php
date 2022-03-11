@@ -1,28 +1,18 @@
 <?php
 
-/**
- * This file is part of Temporal package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
-namespace App\Workflows;
+namespace Boomtown\Implementations;
 
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Workflow;
-use App\Activities\GreetingActivityInterface;
-use App\Activities\HelloActivity;
-use App\Activities\ByeActivity;
-use App\Activities\GreetingActivity;
+use Boomtown\Contracts\HelloWorkflowInterface;
 
 // @@@SNIPSTART php-hello-workflow
-class GreetingWorkflow implements GreetingWorkflowInterface
+class HelloWorkflow implements HelloWorkflowInterface
 {
-    private $greetingActivities = [];
+    private $activities = [];
 
     public function __construct()
     {
@@ -31,17 +21,17 @@ class GreetingWorkflow implements GreetingWorkflowInterface
          * invocations. Because activities are reentrant, only a single stub can be used for multiple
          * activity invocations.
          */
-        $this->greetingActivities = [
+        $this->activities = [
             Workflow::newActivityStub(
-                HelloActivity::class,
+                HelloOneActivity::class,
                 ActivityOptions::new()->withStartToCloseTimeout(CarbonInterval::seconds(2))
             ),
             Workflow::newActivityStub(
-                GreetingActivity::class,
+                HelloTwoActivity::class,
                 ActivityOptions::new()->withStartToCloseTimeout(CarbonInterval::seconds(2))
             ),
             Workflow::newActivityStub(
-                ByeActivity::class,
+                HelloThreeActivity::class,
                 ActivityOptions::new()->withStartToCloseTimeout(CarbonInterval::seconds(2))
             ),
         ];
@@ -50,10 +40,9 @@ class GreetingWorkflow implements GreetingWorkflowInterface
     public function greet(): \Generator
     {
         $results = [];
-        foreach ($this->greetingActivities as $activity) {
+        foreach ($this->activities as $activity) {
             $results[] = yield $activity->composeGreeting();
         }
-
         return $results;
     }
 }

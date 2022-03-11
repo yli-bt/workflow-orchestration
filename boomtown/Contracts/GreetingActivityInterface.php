@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace App\Activities;
+namespace Boomtown\Contracts;
 
 use Temporal\Activity\ActivityInterface;
 use Temporal\Activity\ActivityMethod;

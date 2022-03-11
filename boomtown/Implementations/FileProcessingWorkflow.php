@@ -7,14 +7,15 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Workflows;
+namespace Boomtown\Implementations;
 
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
 use Temporal\Internal\Workflow\ActivityProxy;
 use Temporal\Workflow;
-use App\Activities\StoreActivityInterface;
+use Boomtown\Contracts\StoreActivityInterface;
+use Boomtown\Contracts\FileProcessingWorkflowInterface;
 
 class FileProcessingWorkflow implements FileProcessingWorkflowInterface
 {

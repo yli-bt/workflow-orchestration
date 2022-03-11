@@ -7,11 +7,13 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Activities;
+namespace Boomtown\Implementations;
 
 use Psr\Log\LoggerInterface;
-use App\Utils\Logger;
-use App\Workflows\FileProcessingWorkflow;
+use Boomtown\Utils\Logger;
+use Boomtown\Implementations\FileProcessingWorkflow;
+use Boomtown\Contracts\StoreActivityInterface;
+use Boomtown\Implementations\TaskQueueFilenamePair;
 
 class StoreActivity implements StoreActivityInterface
 {

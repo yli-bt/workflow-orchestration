@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use Temporal\WorkerFactory;
-use Exception;
 use Illuminate\Console\Command;
-use App\Activities\StoreActivity;
-use App\Utils\DeclarationLocator;
+use Boomtown\Implementations\StoreActivity;
+use Boomtown\Utils\DeclarationLocator;
 
 class WorkflowWorkerCommand extends Command
 {
@@ -20,7 +19,7 @@ class WorkflowWorkerCommand extends Command
     {
         ini_set('display_errors', 'stderr');
 
-        $declarations = DeclarationLocator::create(__DIR__ . '/../../');
+        $declarations = DeclarationLocator::create(base_path() . '/boomtown');
 
         $factory = WorkerFactory::create();
         $worker = $factory->newWorker();

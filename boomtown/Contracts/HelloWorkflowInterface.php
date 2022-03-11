@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Workflows;
+namespace Boomtown\Contracts;
 
 // @@@SNIPSTART php-hello-workflow-interface
 use Temporal\Workflow\WorkflowInterface;

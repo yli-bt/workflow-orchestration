@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Workflows;
+namespace Boomtown\Contracts;
 
 use Temporal\Workflow\WorkflowInterface;
 use Temporal\Workflow\WorkflowMethod;

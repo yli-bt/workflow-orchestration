@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Activities;
+namespace Boomtown\Implementations;
 
 class TaskQueueFilenamePair
 {

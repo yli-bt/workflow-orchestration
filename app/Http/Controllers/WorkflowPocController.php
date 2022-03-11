@@ -11,9 +11,9 @@ use Temporal\Client\WorkflowOptions;
 use Temporal\Client\WorkflowClient;
 use Temporal\Client\WorkflowClientInterface;
 use Temporal\Client\GRPC\ServiceClient;
-use App\Workflows\GreetingWorkflowInterface;
-use App\Workflows\HelloWorkflowInterface;
-use App\Workflows\FileProcessingWorkflow;
+use Boomtown\Contracts\GreetingWorkflowInterface;
+use Boomtown\Contracts\HelloWorkflowInterface;
+use Boomtown\Implementations\FileProcessingWorkflow;
 
 class WorkflowPocController extends Controller
 {

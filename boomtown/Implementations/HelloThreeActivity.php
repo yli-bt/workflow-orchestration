@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Activities;
+namespace Boomtown\Implementations;
 
 use Temporal\Activity;
+use Boomtown\Contracts\HelloActivityInterface;
 
 // @@@SNIPSTART php-hello-two-activity
-#[Activity\ActivityInterface(prefix: "HelloTwo.")]
-class HelloTwoActivity implements HelloActivityInterface
+#[ActivityInterface(prefix: "HelloThree.")]
+class HelloThreeActivity implements HelloActivityInterface
 {
     private $greeting = 'Hello';
-    private $name = 'Moe';
+    private $name = 'Curly';
 
     public function composeGreeting(): string
     {

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Utils;
+namespace Boomtown\Utils;
 
 use Spiral\Tokenizer\ClassesInterface;
 use Spiral\Tokenizer\ClassLocator;

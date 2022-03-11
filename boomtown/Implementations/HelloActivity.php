@@ -9,15 +9,16 @@
 
 declare(strict_types=1);
 
-namespace App\Activities;
+namespace Boomtown\Implementations;
 
 use Temporal\Activity;
+use Boomtown\Contracts\GreetingActivityInterface;
 
 /**
  * Activity definition interface. Must redefine the name of the composeGreeting activity to avoid
  * collision.
  */
-#[Activity\ActivityInterface(prefix: "Hello.")]
+#[ActivityInterface(prefix: "Hello.")]
 class HelloActivity implements GreetingActivityInterface
 {
     public function composeGreeting(): string
