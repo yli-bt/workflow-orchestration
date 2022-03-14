@@ -4,12 +4,6 @@ use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
 
-$logFilePath = storage_path('logs/lumen.log');
-
-if (env('RUN_ENVIRONMENT', 'local') == 'gcp') {
-    $logFilePath = '/var/log/lumen/lumen.log';
-}
-
 return [
 
     /*
@@ -56,22 +50,22 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['daily', 'stderr'],
+            'channels' => ['daily', 'stderr', 'stdout'],
         ],
-
+    /**
         'single' => [
             'driver' => 'single',
-            'path' => $logFilePath,
+            'path' => storage_path('logs/lumen.log'),
             'level' => 'debug',
         ],
 
         'daily' => [
             'driver' => 'daily',
-            'path' => $logFilePath,
+            'path' => storage_path('logs/lumen.log'),
             'level' => 'debug',
             'days' => 14,
         ],
-
+    **/
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
@@ -95,6 +89,14 @@ return [
             'handler' => StreamHandler::class,
             'with' => [
                 'stream' => 'php://stderr',
+            ],
+        ],
+
+        'stdout' => [
+            'driver' => 'monolog',
+            'handler' => StreamHandler::class,
+            'with' => [
+                'stream' => 'php://stdout',
             ],
         ],
 

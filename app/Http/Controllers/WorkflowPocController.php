@@ -29,6 +29,16 @@ class WorkflowPocController extends Controller
         'greeting' => GreetingWorkflowInterface::class
     ];
 
+    protected function log($level, $message, $data = [])
+    {
+        if (env('RUN_ENVIRONMENT', 'local') == 'gcp') {
+            Log::channel('stdout')->{$level}($message, $data);
+        } else {
+            Log::{$level}($message, $data);
+        }
+    }
+
+
     /**
      * Create a new controller instance.
      *
@@ -49,22 +59,22 @@ class WorkflowPocController extends Controller
 
         $data = $request->all();
 
-        Log::debug('Running POC Workflow', ['data' => $data]);
+        $this->log('debug', 'Running POC Workflow', ['data' => $data]);
 
         $workflow = $this->workflowClient->newWorkflowStub(
             HelloWorkflowInterface::class,
             WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minute(10))
         );
 
-        Log::debug('Starting POC Workflow');
+        $this->log('debug', 'Starting POC Workflow');
 
         //$result = $workflow->greet('Yicheng');
         //$result = $workflow->processFile("https://file-examples-com.github.io/uploads/2017/10/file-sample_150kB.pdf", 'targetURL');
         $run = $this->workflowClient->start($workflow);
         $result = $run->getResult();
-        Log::debug('Started POC Workflow', [ 'id' => $run->getExecution()->getID() ]);
+        $this->log('debug', 'Started POC Workflow', [ 'id' => $run->getExecution()->getID() ]);
 
-        Log::debug('Done Running POC Workflow', [ 'result' => $result ]);
+        $this->log('debug', 'Done Running POC Workflow', [ 'result' => $result ]);
 
         return response()->json([
             'result' => $result,
