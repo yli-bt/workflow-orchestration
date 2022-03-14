@@ -14,7 +14,7 @@ RUN cd /var/www/html && /usr/local/bin/composer dump-autoload && /usr/local/bin/
 
 RUN umask 0002
 RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 775 /var/www/html/storage/logs
+RUN chmod -R 777 /var/www/html/storage/logs
 RUN chmod g+s /var/www/html/storage/logs
 
 RUN cd /var/www/html && \
