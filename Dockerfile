@@ -12,12 +12,12 @@ RUN sh -c "wget http://getcomposer.org/composer.phar && chmod a+x composer.phar 
 RUN cd /var/www/html && /usr/local/bin/composer install
 RUN cd /var/www/html && /usr/local/bin/composer dump-autoload && /usr/local/bin/composer update
 
+RUN umask 0002
 RUN chown -R www-data:www-data /var/www/html
+RUN chmod g+s /var/www/html/storage/logs
 
 RUN cd /var/www/html && \
     php artisan cache:clear
 
-RUN cd /var/www/html && /var/www/html/vendor/bin/rr get-binary
-
-ENTRYPOINT []
+ENTRYPOINT ["sh", "-c", "/var/www/html/docker/startup.sh"]
 
