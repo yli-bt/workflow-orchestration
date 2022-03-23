@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use http\Exception\RuntimeException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -32,6 +33,8 @@ class WorkflowPocController extends Controller
     protected WorkflowClientInterface $workflowClient;
 
     private const DEFAULT_TEMPORAL_HOST = 'temporal:7233';
+    private const DEFAULT_TEMPORAL_ADMIN_HOST = 'http://host.docker.internal:8088';
+    private const DEFAULT_TEMPORAL_ADMIN_WORKFLOW_URI = '/api/namespaces/default/workflows';
 
     protected $workflows = [
         'hello' => HelloWorkflowInterface::class,
@@ -61,6 +64,20 @@ class WorkflowPocController extends Controller
         );
     }
 
+    protected function getTemporalWorkflowUrl($workflowInstanceId, $workflowRunId)
+    {
+        return env('TEMPORAL_ADMIN_HOST', self::DEFAULT_TEMPORAL_ADMIN_HOST) .
+            env('TEMPORAL_ADMIN_WORKFLOW_URL', self::DEFAULT_TEMPORAL_ADMIN_WORKFLOW_URI) .
+            '/' . $workflowInstanceId . '/' . $workflowRunId;
+    }
+
+    protected function getTemporalWorkflowHistoryUrl($workflowInstanceId, $workflowRunId)
+    {
+        return env('TEMPORAL_ADMIN_HOST', self::DEFAULT_TEMPORAL_ADMIN_HOST) .
+            env('TEMPORAL_ADMIN_WORKFLOW_URL', self::DEFAULT_TEMPORAL_ADMIN_WORKFLOW_URI) .
+            '/' . $workflowInstanceId . '/' . $workflowRunId . '/history?waitForNewEvent=true';
+    }
+
     /**
      * @throws ValidationException
      */
@@ -75,7 +92,7 @@ class WorkflowPocController extends Controller
             ->where(['name' => 'HelloWorkflow'])
             ->get();
 
-        $runUuid = Uuid::v4();
+        $workflowInstanceUuid = Uuid::v4();
         $workflowName = $data['workflow_name'] ?? 'hello';
         if (isset($this->workflows[$workflowName])) {
             $workflowClass = $this->workflows[$workflowName];
@@ -86,26 +103,28 @@ class WorkflowPocController extends Controller
             $workflowClass,
             WorkflowOptions::new()
                 ->withWorkflowExecutionTimeout(CarbonInterval::minute(10))
-                ->withWorkflowId($runUuid)
+                ->withWorkflowId($workflowInstanceUuid)
         );
 
         $this->log('debug', 'Starting POC Workflow');
 
+        //$result = $workflow->greet('Yicheng');
+        //$result = $workflow->processFile("https://file-examples-com.github.io/uploads/2017/10/file-sample_150kB.pdf", 'targetURL');
+        $run = $this->workflowClient->start($workflow);
+        $runUuid = $run->getExecution()->getRunID();
+        $workflowUuid = $helloWorkflow[0]->uuid;
         if ($helloWorkflow && count($helloWorkflow) > 0) {
             $workflowRun = new WorkflowRuns();
             $workflowRun->uuid = $runUuid;
-            $workflowRun->workflow_uuid = $helloWorkflow[0]->uuid;
+            $workflowRun->workflow_instance_uuid= $workflowInstanceUuid;
+            $workflowRun->workflow_uuid = $workflowUuid;
             $workflowRun->input = json_encode([]);
             $workflowRun->metadata = json_encode([]);
             $workflowRun->start_at = new DateTime();
             $workflowRun->save();
         }
-
-        //$result = $workflow->greet('Yicheng');
-        //$result = $workflow->processFile("https://file-examples-com.github.io/uploads/2017/10/file-sample_150kB.pdf", 'targetURL');
-        $run = $this->workflowClient->start($workflow);
         $result = $run->getResult();
-        $this->log('debug', 'Started POC Workflow', [ 'id' => $run->getExecution()->getID() ]);
+        $this->log('debug', 'Started POC Workflow', [ 'id' => $runUuid ]);
 
         $this->log('debug', 'Done Running POC Workflow', [ 'result' => $result ]);
 
@@ -122,27 +141,57 @@ class WorkflowPocController extends Controller
         $this->log('debug', 'Query Workflow Status');
 
         $workflowRun = WorkflowRuns::findOrFail($uuid);
-        $workflow = Workflows::findOrFail($workflowRun->workflow_uuid);
         $this->log('debug', 'Workflow Run found for '.$uuid);
 
-        $workflowExecution = new WorkflowExecution();
-        $workflowExecution->setRunId($workflowRun->uuid);
-        $workflowExecution->setWorkflowId($workflowRun->workflow_uuid);
 
-        $options = WorkflowOptions::new();
-        $describeWorkflowExecutionRequest = new DescribeWorkflowExecutionRequest();
-        $describeWorkflowExecutionRequest->setNamespace('default');
-        $describeWorkflowExecutionRequest->setExecution($workflowExecution);
+        try {
+            $workflowData = $this->getTemporalWorkflowData($workflowRun->workflow_instance_uuid, $workflowRun->uuid);
+            $workflowHistoryData = $this->getTemporalWorkflowHistoryData($workflowRun->workflow_instance_uuid, $workflowRun->uuid);
+        } catch (\RuntimeException $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
 
-        $this->log('debug', 'Describe Workflow Execution');
-        $describeWorkflowExecutionResponse = $this->workflowClient->getServiceClient()->DescribeWorkflowExecution(
-            $describeWorkflowExecutionRequest
-        );
+        return response()->json([
+            'workflow' => json_decode($workflowData, true),
+            'workflow_history' => json_decode($workflowHistoryData, true)
+        ]);
+    }
 
-        $this->log('debug', 'Get Workflow Execution Info');
-        $workflowExecutionInfo = $describeWorkflowExecutionResponse->getWorkflowExecutionInfo();
+    protected function getTemporalWorkflowData($workflowInstanceUuid, $workflowRunUuid)
+    {
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $this->getTemporalWorkflowUrl($workflowInstanceUuid, $workflowRunUuid),
+            CURLOPT_TIMEOUT => 30000,
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
+        $response = curl_exec($ch);
+        $err = curl_error($ch);
+        curl_close($ch);
 
-        $this->log('debug', 'Return Response');
-        return response()->json($workflowExecutionInfo);
+        if ($err) {
+            throw new RuntimeException('Curl Error: '.$err);
+        }
+
+        return $response;
+    }
+
+    protected function getTemporalWorkflowHistoryData($workflowInstanceUuid, $workflowRunUuid)
+    {
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $this->getTemporalWorkflowHistoryUrl($workflowInstanceUuid, $workflowRunUuid),
+            CURLOPT_TIMEOUT => 30000,
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
+        $response = curl_exec($ch);
+        $err = curl_error($ch);
+        curl_close($ch);
+
+        if ($err) {
+            throw new RuntimeException('Curl Error: '.$err);
+        }
+
+        return $response;
     }
 }

@@ -39,6 +39,7 @@ class CreateWorkflowsTable extends Migration
         });
         Schema::create('workflow_runs', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
+            $table->uuid('workflow_instance_uuid');
             $table->json('input')->nullable();
             $table->json('metadata')->nullable();
             $table->dateTime('created_at');
