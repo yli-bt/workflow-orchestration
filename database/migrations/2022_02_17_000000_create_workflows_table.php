@@ -15,40 +15,40 @@ class CreateWorkflowsTable extends Migration
     public function up()
     {
         Schema::create('workflows', function (Blueprint $table) {
-            $table->uuid('uuid')->default(new Expression('(uuid())'))->primary();
+            $table->uuid('uuid')->primary();
             $table->string('version', 80)->default('1.0');
             $table->string('spec_version', 80)->default('1.0');
             $table->string('name')->index();
             $table->text('friendly_name')->nullable();
             $table->string('hash')->index();
             $table->enum('publish_status', ['draft', 'published'])->default('draft');
-            $table->json('dsl');
+            $table->json('dsl')->nullable();
             $table->boolean('is_callable')->default(false);
-            $table->string('created_by', 80);
+            $table->string('created_by', 80)->nullable();
             $table->dateTime('created_at');
         });
         Schema::create('workflow_audit_logs', function (Blueprint $table) {
-            $table->uuid('uuid')->default(new Expression('(uuid())'))->primary();
+            $table->uuid('uuid')->primary();
             $table->enum('action', ['create', 'update', 'delete']);
             $table->string('column');
-            $table->text('old_value');
+            $table->text('old_value')->nullable();
             $table->text('new_value');
             $table->string('created_by', 80);
             $table->dateTime('created_at');
             $table->foreignUuid('workflow_uuid')->references('uuid')->on('workflows');
         });
         Schema::create('workflow_runs', function (Blueprint $table) {
-            $table->uuid('uuid')->default(new Expression('(uuid())'))->primary();
+            $table->uuid('uuid')->primary();
             $table->json('input')->nullable();
             $table->json('metadata')->nullable();
             $table->dateTime('created_at');
-            $table->dateTime('updated_at');
-            $table->dateTime('start_at');
-            $table->dateTime('end_at');
+            $table->dateTime('updated_at')->nullable();
+            $table->dateTime('start_at')->nullable();
+            $table->dateTime('end_at')->nullable();
             $table->foreignUuid('workflow_uuid')->references('uuid')->on('workflows');
         });
         Schema::create('object_references', function (Blueprint $table) {
-            $table->uuid('uuid')->default(new Expression('(uuid())'))->primary();
+            $table->uuid('uuid')->primary();
             $table->string('object_type', 80);
             $table->string('object_id', 80);
         });
@@ -57,16 +57,16 @@ class CreateWorkflowsTable extends Migration
             $table->foreignUuid('object_reference_uuid')->references('uuid')->on('object_references');
         });
         Schema::create('activities', function (Blueprint $table) {
-            $table->uuid('uuid')->default(new Expression('(uuid())'))->primary();
+            $table->uuid('uuid')->primary();
             $table->string('version', 80)->default('1.0');
             $table->string('name')->index();
             $table->text('description')->nullable();
-            $table->json('events_dsl');
-            $table->json('functions_dsl');
-            $table->json('dsl');
-            $table->string('created_by', 80);
+            $table->json('events_dsl')->nullable();
+            $table->json('functions_dsl')->nullable();
+            $table->json('dsl')->nullable();
+            $table->string('created_by', 80)->nullable();
             $table->dateTime('created_at');
-            $table->string('updated_by', 80);
+            $table->string('updated_by', 80)->nullable();
             $table->dateTime('updated_at');
         });
     }

@@ -8,6 +8,9 @@ use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Workflow;
 use Boomtown\Contracts\HelloWorkflowInterface;
+use Boomtown\Contracts\HelloOneActivityInterface;
+use Boomtown\Contracts\HelloTwoActivityInterface;
+use Boomtown\Contracts\HelloThreeActivityInterface;
 
 // @@@SNIPSTART php-hello-workflow
 class HelloWorkflow implements HelloWorkflowInterface
@@ -40,8 +43,8 @@ class HelloWorkflow implements HelloWorkflowInterface
     public function greet(): \Generator
     {
         $results = [];
-        foreach ($this->activities as $activity) {
-            $results[] = yield $activity->composeGreeting();
+        for($i = 0; $i < count($this->activities); $i++) {
+            $results[] = yield $this->activities[$i]->composeGreeting();
         }
         return $results;
     }

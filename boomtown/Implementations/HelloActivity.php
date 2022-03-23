@@ -21,6 +21,7 @@ use Boomtown\Contracts\GreetingActivityInterface;
 #[ActivityInterface(prefix: "Hello.")]
 class HelloActivity implements GreetingActivityInterface
 {
+    #[ActivityMethod("composeGreeting")]
     public function composeGreeting(): string
     {
         $name = 'Larry';

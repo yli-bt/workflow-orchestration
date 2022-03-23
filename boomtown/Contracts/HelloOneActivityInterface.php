@@ -8,9 +8,9 @@ namespace Boomtown\Contracts;
 use Temporal\Activity\ActivityInterface;
 use Temporal\Activity\ActivityMethod;
 
-interface HelloActivityInterface
+#[ActivityInterface(prefix:"HelloOne.")]
+interface HelloOneActivityInterface
 {
-    #[ActivityMethod("composeGreeting")]
     public function composeGreeting(): string;
 }
 // @@@SNIPEND

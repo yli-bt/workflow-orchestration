@@ -14,6 +14,7 @@
 */
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 $router->get('/v1', function () use ($router) {
     return "Workflow Orchestration Microservice API" . " [". $router->app->version() . "]";
@@ -22,27 +23,13 @@ $router->get('/v1', function () use ($router) {
 $router->group(['prefix' => 'v1', 'middleware' => 'JsonRequestMiddleware'], function() use ($router) {
 
     $router->post('/poc', 'WorkflowPocController@run');
-    /**
-    $router->post('/message', 'SendMailController@queueMessage');
+    $router->get('/status/{uuid}', 'WorkflowPocController@getStatus');
 
-    $router->post('/template', 'SendMailController@queueTemplate');
-
-    $router->get('/test', function () use ($router) {
-
-        $data = request()->all();
-        $response_data = [
-            'request' => $data,
-            'response' => [
-                'result' => 'Success.'
-            ],
-            'test_env_var' => getenv('TEST_ENV_VAR')
-        ];
-
-        Log::notice('Hit /test endpoint');
-
-        return response()->json($response_data);
-
-    });
-    **/
+    $router->get('/activities', 'ActivityController@index');
+    $router->get('/activities/{uuid}', 'ActivityController@show');
+    $router->get('/workflows', 'WorkflowController@index');
+    $router->get('/workflows/{uuid}', 'WorkflowController@show');
+    $router->get('/workflow-runs', 'WorkflowRunController@index');
+    $router->get('/workflow-runs/{uuid}', 'WorkflowRunController@show');
 });
 

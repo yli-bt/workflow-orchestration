@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Boomtown\Implementations;
 
 use Temporal\Activity;
-use Boomtown\Contracts\HelloActivityInterface;
+use Boomtown\Contracts\HelloOneActivityInterface;
 
 // @@@SNIPSTART php-hello-one-activity
-#[ActivityInterface(prefix: "HelloOne.")]
-class HelloOneActivity implements HelloActivityInterface
+class HelloOneActivity implements HelloOneActivityInterface
 {
     private $greeting = 'Hello';
     private $name = 'Larry';
 
+    #[ActivityMethod("composeGreeting")]
     public function composeGreeting(): string
     {
         return $this->greeting . ' ' . $this->name;
