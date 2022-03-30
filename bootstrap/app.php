@@ -64,6 +64,9 @@ $app->configure('app');
 /* register the "view" configuration file */
 $app->configure('view');
 
+/* register boomtown constom config file */
+$app->configure('boomtown');
+
 /*
 |--------------------------------------------------------------------------
 | Register Middleware

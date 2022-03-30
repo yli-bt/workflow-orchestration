@@ -31,9 +31,10 @@ class WorkflowPocController extends Controller
 
     protected WorkflowClientInterface $workflowClient;
 
-    private const DEFAULT_TEMPORAL_HOST = 'temporal:7233';
-    private const DEFAULT_TEMPORAL_ADMIN_HOST = 'http://host.docker.internal:8088';
-    private const DEFAULT_TEMPORAL_ADMIN_WORKFLOW_URI = '/api/namespaces/default/workflows';
+    // see config/boomtown.php
+    public const DEFAULT_TEMPORAL_HOST = 'temporal:7233';
+    public const DEFAULT_TEMPORAL_ADMIN_HOST = 'http://host.docker.internal:8088';
+    public const DEFAULT_TEMPORAL_ADMIN_WORKFLOW_URI = '/api/namespaces/default/workflows';
 
     protected $workflows = [
         'hello' => HelloWorkflowInterface::class,
@@ -59,21 +60,21 @@ class WorkflowPocController extends Controller
     public function __construct()
     {
         $this->workflowClient = WorkflowClient::create(
-            ServiceClient::create(env('TEMPORAL_HOST', self::DEFAULT_TEMPORAL_HOST))
+            ServiceClient::create(config('boomtown.temporal.host'))
         );
     }
 
     protected function getTemporalWorkflowUrl($workflowInstanceId, $workflowRunId)
     {
-        return env('TEMPORAL_ADMIN_HOST', self::DEFAULT_TEMPORAL_ADMIN_HOST) .
-            env('TEMPORAL_ADMIN_WORKFLOW_URL', self::DEFAULT_TEMPORAL_ADMIN_WORKFLOW_URI) .
+        return config('boomtown.temporal.admin.host') .
+            config('boomtown.temporal.admin.workflow_url') .
             '/' . $workflowInstanceId . '/' . $workflowRunId;
     }
 
     protected function getTemporalWorkflowHistoryUrl($workflowInstanceId, $workflowRunId)
     {
-        return env('TEMPORAL_ADMIN_HOST', self::DEFAULT_TEMPORAL_ADMIN_HOST) .
-            env('TEMPORAL_ADMIN_WORKFLOW_URL', self::DEFAULT_TEMPORAL_ADMIN_WORKFLOW_URI) .
+        return config('boomtown.temporal.admin.host') .
+            config('boomtown.temporal.admin.workflow_url') .
             '/' . $workflowInstanceId . '/' . $workflowRunId . '/history?waitForNewEvent=true';
     }
 
