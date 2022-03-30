@@ -14,7 +14,6 @@ namespace Boomtown\Implementations;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Workflow;
-use Boomtown\Contracts\GreetingActivityInterface;
 use Boomtown\Contracts\GreetingWorkflowInterface;
 
 // @@@SNIPSTART php-hello-workflow

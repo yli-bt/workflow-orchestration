@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Boomtown\Implementations;
 
-use Temporal\Activity;
 use Boomtown\Contracts\HelloThreeActivityInterface;
 
 // @@@SNIPSTART php-hello-two-activity

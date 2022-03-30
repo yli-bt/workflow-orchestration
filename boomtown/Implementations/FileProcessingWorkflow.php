@@ -11,7 +11,6 @@ namespace Boomtown\Implementations;
 
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
-use Temporal\Common\RetryOptions;
 use Temporal\Internal\Workflow\ActivityProxy;
 use Temporal\Workflow;
 use Boomtown\Contracts\StoreActivityInterface;

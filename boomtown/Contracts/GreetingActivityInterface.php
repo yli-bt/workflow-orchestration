@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Boomtown\Contracts;
 
-use Temporal\Activity\ActivityInterface;
-use Temporal\Activity\ActivityMethod;
-
 interface GreetingActivityInterface
 {
     public function composeGreeting(): string;

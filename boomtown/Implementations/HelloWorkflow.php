@@ -8,9 +8,6 @@ use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Workflow;
 use Boomtown\Contracts\HelloWorkflowInterface;
-use Boomtown\Contracts\HelloOneActivityInterface;
-use Boomtown\Contracts\HelloTwoActivityInterface;
-use Boomtown\Contracts\HelloThreeActivityInterface;
 
 // @@@SNIPSTART php-hello-workflow
 class HelloWorkflow implements HelloWorkflowInterface

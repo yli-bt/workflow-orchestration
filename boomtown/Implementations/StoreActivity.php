@@ -11,9 +11,7 @@ namespace Boomtown\Implementations;
 
 use Psr\Log\LoggerInterface;
 use Boomtown\Utils\Logger;
-use Boomtown\Implementations\FileProcessingWorkflow;
 use Boomtown\Contracts\StoreActivityInterface;
-use Boomtown\Implementations\TaskQueueFilenamePair;
 
 class StoreActivity implements StoreActivityInterface
 {

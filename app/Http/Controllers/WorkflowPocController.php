@@ -24,7 +24,6 @@ use App\Models\Workflows;
 use Temporal\Common\Uuid;
 use Illuminate\Support\Facades\DB;
 use DateTime;
-use Temporal\Workflow\WorkflowStub as WorkflowStubConverter;
 
 class WorkflowPocController extends Controller
 {
@@ -118,8 +117,8 @@ class WorkflowPocController extends Controller
             $workflowRun->uuid = $runUuid;
             $workflowRun->workflow_instance_uuid= $workflowInstanceUuid;
             $workflowRun->workflow_uuid = $workflowUuid;
-            $workflowRun->input = json_encode([]);
-            $workflowRun->metadata = json_encode([]);
+            $workflowRun->input = json_encode(new \stdClass());
+            $workflowRun->metadata = json_encode(new \stdClass());
             $workflowRun->start_at = new DateTime();
             $workflowRun->save();
         }
