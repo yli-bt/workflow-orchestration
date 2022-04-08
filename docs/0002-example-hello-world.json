@@ -1,0 +1,71 @@
+{
+    "id": "helloStooges",
+    "version": "1.0",
+    "specVersion": "0.8",
+    "Hash": "2ed01372d1149baa5a79d25e5eda3372",
+    "name": "Hello Stooges",
+    "description": "Hello Stooges Workflow",
+    "start": "Hello Larry",
+    "callable": "true",
+    "states":[
+        {
+            "name":"Hello Larry",
+            "version": "1.0",
+            "type": "operation",
+            "actions": [
+                {
+                    "name": "Say Hello Larry",
+                    "functionRef": "HelloLarry",
+                    "sleep": {
+                        "after": "PT1S"
+                    }
+                }
+            ],
+            "transition": "Hello Moe"
+        },
+        {
+            "name":"Hello Moe",
+            "version": "1.0",
+            "type": "operation",
+            "actions": [
+                {
+                    "name": "Say Hello Moe",
+                    "functionRef": "HelloMoe",
+                    "sleep": {
+                        "after": "PT1S"
+                    }
+                }
+            ],
+            "transition": "Hello Curly"
+        },
+        {
+            "name":"Hello Curly",
+            "version": "1.0",
+            "type": "operation",
+            "actions": [
+                {
+                    "name": "Say Hello Curly",
+                    "functionRef": "HelloCurly"
+                }
+            ],
+            "end": true
+        }
+    ],
+    "functions": [
+        {
+            "name": "HelloLarry",
+            "type": "rest",
+            "operation": "http://127.0.0.1/hello/larry"
+        },
+        {
+            "name": "HelloMoe",
+            "type": "rest",
+            "operation": "http://127.0.0.1/hello/larry"
+        },
+        {
+            "name": "HelloCurly",
+            "type": "rest",
+            "operation": "http://127.0.0.1/hello/larry"
+        },
+    ]
+}

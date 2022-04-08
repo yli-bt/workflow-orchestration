@@ -24,15 +24,21 @@ class HelloWorkflow implements HelloWorkflowInterface
         $this->activities = [
             Workflow::newActivityStub(
                 HelloOneActivity::class,
-                ActivityOptions::new()->withStartToCloseTimeout(CarbonInterval::seconds(2))
+                ActivityOptions::new()
+                    ->withActivityId('Hello Activity Red')
+                    ->withStartToCloseTimeout(CarbonInterval::seconds(60))
             ),
             Workflow::newActivityStub(
                 HelloTwoActivity::class,
-                ActivityOptions::new()->withStartToCloseTimeout(CarbonInterval::seconds(2))
+                ActivityOptions::new()
+                    ->withActivityId('Hello Activity Green')
+                    ->withStartToCloseTimeout(CarbonInterval::seconds(60))
             ),
             Workflow::newActivityStub(
                 HelloThreeActivity::class,
-                ActivityOptions::new()->withStartToCloseTimeout(CarbonInterval::seconds(2))
+                ActivityOptions::new()
+                    ->withActivityId('Hello Activity Blue')
+                    ->withStartToCloseTimeout(CarbonInterval::seconds(60))
             ),
         ];
     }
