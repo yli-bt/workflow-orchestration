@@ -20,5 +20,7 @@ RUN chmod g+s /var/www/html/storage/logs
 RUN cd /var/www/html && \
     php artisan cache:clear
 
+RUN cd /var/www/html && /var/www/html/vendor/bin/rr get-binary
+
 ENTRYPOINT ["sh", "-c", "/var/www/html/docker/startup.sh"]
 
