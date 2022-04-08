@@ -15,6 +15,7 @@ class HelloTwoActivity implements HelloTwoActivityInterface
     #[ActivityMethod("composeGreeting")]
     public function composeGreeting(): string
     {
+        sleep(20);
         return $this->greeting . ' ' . $this->name;
     }
 }
